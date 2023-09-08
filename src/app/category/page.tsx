@@ -1,61 +1,69 @@
-/* type CategoryProps = {
-  name: string
-  description?: string
-} */
-
+"use client"
 import Breadcrumb from "@/components/Breadcrumb"
 import BaseTemplate from "@/components/template/BaseTemplate"
+import { FileEdit, Trash2 } from "lucide-react"
+import { CategoryService } from "./service/CategoryService"
+import { useEffect, useState } from "react"
 
-export default function Category() {
-  /*   const response = await fetch(`${process.env.URL_API}/categories`, {
-    next: {
-      revalidate: 60
-    }
-  })
+export type CategoryProps = {
+  id?: number
+  name: string
+  description?: string
+}
 
-  const categories = await response.json()
- */
+function Category() {
+  const [categories, setCategories] = useState<CategoryProps[]>()
+
+  useEffect(() => {
+    getCategories()
+  }, [])
+
+  async function getCategories() {
+    const response = await CategoryService.getCategory()
+    setCategories(response)
+  }
+
   return (
     <BaseTemplate>
       <Breadcrumb
         pageTitle="Lista de categorias"
         title="cadastrar"
+        link="category/create"
         currentTitle="categorias"
       />
       <div className="wrapper-content">
         <div className="overflow-x-auto">
           <table className="table">
-            {/* head */}
             <thead>
               <tr>
+                <th>Codigo</th>
+                <th>Nome</th>
+                <th>Descrição</th>
                 <th></th>
-                <th>Name</th>
-                <th>Job</th>
-                <th>Favorite Color</th>
               </tr>
             </thead>
             <tbody>
-              {/* row 1 */}
-              <tr>
-                <th>1</th>
-                <td>Cy Ganderton</td>
-                <td>Quality Control Specialist</td>
-                <td>Blue</td>
-              </tr>
-              {/* row 2 */}
-              <tr>
-                <th>2</th>
-                <td>Hart Hagerty</td>
-                <td>Desktop Support Technician</td>
-                <td>Purple</td>
-              </tr>
-              {/* row 3 */}
-              <tr>
-                <th>3</th>
-                <td>Brice Swyre</td>
-                <td>Tax Accountant</td>
-                <td>Red</td>
-              </tr>
+              {categories?.map((category) => (
+                <tr key={category.id}>
+                  <th>{category.id}</th>
+                  <td>{category.name ? category.name : "-"}</td>
+                  <td>{category.description ? category.description : "-"}</td>
+                  <td className="flex gap-2">
+                    {
+                      <FileEdit
+                        size={20}
+                        className="cursor-pointer text-violet-400"
+                      />
+                    }
+                    {
+                      <Trash2
+                        size={20}
+                        className="cursor-pointer text-red-600"
+                      />
+                    }
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -63,3 +71,5 @@ export default function Category() {
     </BaseTemplate>
   )
 }
+
+export default Category

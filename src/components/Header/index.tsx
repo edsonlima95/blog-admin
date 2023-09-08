@@ -1,10 +1,10 @@
-import { Gear } from "phosphor-react"
+import { Settings } from "lucide-react"
 
 function Header() {
   return (
-    <header className="bg-white flex justify-end sticky top-0 col-start-2 px-5 pt-5">
+    <header className="z-10 bg-white flex justify-end sticky top-0 px-5 pt-5">
       <div className="dropdown dropdown-end">
-        <Gear tabIndex={0} className="text-zinc-600" size={32} />
+        <Settings tabIndex={0} className="text-zinc-600" size={26} />
         <ul
           tabIndex={0}
           className="dropdown-content z-[1] menu p-2 shadow text-white bg-violet-700 rounded-lg w-52">

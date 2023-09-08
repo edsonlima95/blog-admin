@@ -1,16 +1,19 @@
-"use client"
+import { Home, List, PlusCircle, TableProperties } from "lucide-react"
 import Link from "next/link"
-import { HouseSimple, List, PlusCircle } from "phosphor-react"
+
+type BreadcrumbProps = {
+  title: "cadastrar" | "listar"
+  pageTitle: string
+  link: string
+  currentTitle: string
+}
 
 function Breadcrumb({
   pageTitle,
-  title,
+  title = "cadastrar",
+  link,
   currentTitle
-}: {
-  title: string
-  pageTitle: string
-  currentTitle: string
-}) {
+}: BreadcrumbProps) {
   return (
     <div className="text-sm breadcrumbs mb-8">
       <h2 className="uppercase text-xl font-semibold mb-4 text-zinc-600">
@@ -18,19 +21,23 @@ function Breadcrumb({
       </h2>
       <ul>
         <li>
-          <Link href="/" className="text-zinc-500">
-            <HouseSimple size={20} className="mr-2 text-violet-600" />
+          <Link href={link} className="text-zinc-500">
+            <Home size={20} className="mr-2 text-violet-600" />
             Home
           </Link>
         </li>
         <li>
-          <Link href="/" className="text-zinc-500">
-            <PlusCircle size={20} className="mr-2 text-green-600" />
+          <Link href={link} className="text-zinc-500">
+            {title == "cadastrar" ? (
+              <PlusCircle size={20} className="mr-2 text-green-600" />
+            ) : (
+              <List size={20} className="mr-2 text-green-600" />
+            )}
             {title}
           </Link>
         </li>
         <li>
-          <List size={20} className="mr-2 stroke-current" />
+          <TableProperties size={20} className="mr-2 stroke-current" />
           {currentTitle}
         </li>
       </ul>
