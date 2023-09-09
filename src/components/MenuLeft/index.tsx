@@ -18,25 +18,25 @@ function MenuLeft() {
           </Link>
         </li>
         <li className="hover:bg-violet-700 hover:rounded-sm">
-          <a
+          <Link
             href="/posts"
             className="text-zinc-600  px-1 py-1 hover:py-1 hover:text-white flex items-center gap-1 mb-3">
             <Newspaper size={22} /> Posts
-          </a>
+          </Link>
         </li>
         <li className="hover:bg-violet-700 hover:rounded-sm">
-          <a
+          <Link
             href="/category"
             className="text-zinc-600 px-1 py-1 hover:py-1 hover:text-white flex items-center gap-1 mb-3">
             <List size={22} /> Categorias
-          </a>
+          </Link>
         </li>
         <li className="hover:bg-violet-700 hover:rounded-sm">
-          <a
+          <Link
             href="#"
             className="text-zinc-600 px-1 py-1 hover:py-1 hover:text-white flex items-center gap-1 mb-3">
             <LogOut size={22} /> Sair
-          </a>
+          </Link>
         </li>
       </ul>
     </nav>

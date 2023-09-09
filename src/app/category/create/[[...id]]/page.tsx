@@ -4,37 +4,73 @@ import BaseTemplate from "@/components/template/BaseTemplate"
 import { useForm } from "react-hook-form"
 import { CategoryService } from "../../service/CategoryService"
 import { toast } from "react-toastify"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { useEffect } from "react"
 
-/* type CategoryPramsProps = {
+type CategoryFormProps = {
   params: {
     id: [string | number]
   }
 }
- */
 
-export type CategoryFormProps = {
+export type CategoryProps = {
   id?: number
   name: string
   description?: string
 }
 
-function CategoryForm() {
+const schema = z.object({
+  name: z.string().nonempty({ message: "nome é obrigatório" }),
+  description: z.string().optional()
+})
+
+function CategoryForm({ params }: CategoryFormProps) {
   const {
     register,
     handleSubmit,
     setError,
+    setValue,
     formState: { errors }
-  } = useForm<CategoryFormProps>()
+  } = useForm<CategoryProps>({
+    resolver: zodResolver(schema)
+  })
 
-  async function onSubmit(data: CategoryFormProps) {
-    const response = await CategoryService.createCategory(data)
-    if (response.message) {
-      for (const error of response.message) {
-        setError(error.property, { message: error.message })
+  useEffect(() => {
+    if (params.id) {
+      findById(Number(params.id[0]))
+    }
+  }, [])
+
+  async function onSubmit(data: CategoryProps) {
+    if (params.id) {
+      const response = await CategoryService.updateCategory(
+        Number(params.id[0]),
+        data
+      )
+      if (response.message) {
+        for (const error of response.message) {
+          setError(error.property, { message: error.message })
+        }
+      } else {
+        toast.success("Categoria atualizada com sucesso!")
       }
     } else {
-      toast.success("Categoria cadastrada com sucesso!")
+      const response = await CategoryService.createCategory(data)
+      if (response.message) {
+        for (const error of response.message) {
+          setError(error.property, { message: error.message })
+        }
+      } else {
+        toast.success("Categoria cadastrada com sucesso!")
+      }
     }
+  }
+
+  async function findById(id: number) {
+    const response = await CategoryService.findById(id)
+    setValue("name", response.name)
+    setValue("description", response.description)
   }
 
   return (

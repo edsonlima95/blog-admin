@@ -4,6 +4,7 @@ import BaseTemplate from "@/components/template/BaseTemplate"
 import { FileEdit, Trash2 } from "lucide-react"
 import { CategoryService } from "./service/CategoryService"
 import { useEffect, useState } from "react"
+import Link from "next/link"
 
 export type CategoryProps = {
   id?: number
@@ -50,10 +51,12 @@ function Category() {
                   <td>{category.description ? category.description : "-"}</td>
                   <td className="flex gap-2">
                     {
-                      <FileEdit
-                        size={20}
-                        className="cursor-pointer text-violet-400"
-                      />
+                      <Link href={`/category/create/${category.id}`}>
+                        <FileEdit
+                          size={20}
+                          className="cursor-pointer text-violet-400"
+                        />
+                      </Link>
                     }
                     {
                       <Trash2
