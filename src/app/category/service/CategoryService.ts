@@ -16,9 +16,12 @@ export class CategoryService {
     return response.json()
   }
 
-  static async getCategory(): Promise<CategoryProps[]> {
+  static async getCategory(
+    page: number,
+    perpage: number
+  ): Promise<CategoryProps[]> {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/categories`
+      `${process.env.NEXT_PUBLIC_URL_API}/categories?page=${page}&perpage=${perpage}`
     )
 
     return response.json()
@@ -45,5 +48,11 @@ export class CategoryService {
     )
 
     return response.json()
+  }
+
+  static async deleteCategory(id: number) {
+    return await fetch(`${process.env.NEXT_PUBLIC_URL_API}/categories/${id}`, {
+      method: "DELETE"
+    })
   }
 }
