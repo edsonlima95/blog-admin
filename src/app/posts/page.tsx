@@ -1,40 +1,49 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumb"
+import ConfirmModal from "@/components/ConfirmModal"
 import BaseTemplate from "@/components/template/BaseTemplate"
 import { FileEdit, Trash2 } from "lucide-react"
-import { CategoryService } from "./service/CategoryService"
-import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 import swal from "sweetalert"
+import { PostService } from "./service/PostService"
 import { Pagination } from "@mui/material"
-import ConfirmModal from "@/components/ConfirmModal"
 
-export type CategoryProps = {
+export type PostProps = {
   id?: number
-  name: string
-  description?: string
+  title: string
+  description: string
+  status: boolean
+  user: {
+    id: number
+    name: string
+  }
+  category: {
+    id: number
+    name: string
+  }
 }
 
-function Category() {
+function PostList() {
   const perpage = 5
-  const [categories, setCategories] = useState<CategoryProps[]>()
+  const [posts, setPosts] = useState<PostProps[]>()
   const [page, setPage] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
   const totalPages = Math.ceil(totalItems / perpage)
 
   useEffect(() => {
-    getCategories(page, perpage)
+    getPosts(page, perpage)
   }, [])
 
-  async function getCategories(page: number, perpage: number) {
-    const response = await CategoryService.getCategory(page, perpage)
-    setCategories(response.categoriesList)
+  async function getPosts(page: number, perpage: number) {
+    const response = await PostService.getPost(page, perpage)
+    setPosts(response.postsList)
     setTotalItems(response.totalItems)
   }
 
   function handleChange(event, page: number) {
     setPage(page)
-    getCategories(page, perpage)
+    getPosts(page, perpage)
   }
 
   async function confirmModal(id: number) {
@@ -50,8 +59,8 @@ function Category() {
       dangerMode: true
     }).then(async (id) => {
       if (id) {
-        await CategoryService.deleteCategory(id)
-        getCategories(page, perpage)
+        await PostService.deletePost(id)
+        getPosts(page, perpage)
         swal("Categoria deletada com sucesso!", {
           icon: "success"
         })
@@ -63,16 +72,16 @@ function Category() {
     <>
       <ConfirmModal
         title="Excluir categoria"
-        modalId="modal_category"
+        modalId="modal_Post"
         description="Texto do modal"
       />
 
       <BaseTemplate>
         <Breadcrumb
-          pageTitle="Lista de categorias"
+          pageTitle="Lista de posts"
           title="cadastrar"
-          link="category/create"
-          currentTitle="categorias"
+          link="posts/create"
+          currentTitle="posts"
         />
         <div className="wrapper-content">
           <div className="overflow-x-auto">
@@ -80,20 +89,26 @@ function Category() {
               <thead>
                 <tr>
                   <th>Codigo</th>
-                  <th>Nome</th>
+                  <th>title</th>
                   <th>Descrição</th>
+                  <th>Situação</th>
+                  <th>Autor</th>
+                  <th>Categoria</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {categories?.map((category) => (
-                  <tr key={category.id}>
-                    <th>{category.id}</th>
-                    <td>{category.name ? category.name : "-"}</td>
-                    <td>{category.description ? category.description : "-"}</td>
+                {posts?.map((post) => (
+                  <tr key={post.id}>
+                    <th>{post.id}</th>
+                    <td>{post.title}</td>
+                    <td>{post.description}</td>
+                    <td>{post.status ? "ativo" : "inativo"}</td>
+                    <td>{post.user.name}</td>
+                    <td>{post.category.name}</td>
                     <td className="flex gap-2">
                       {
-                        <Link href={`/category/create/${category.id}`}>
+                        <Link href={`/Post/create/${post.id}`}>
                           <FileEdit
                             size={20}
                             className="cursor-pointer text-violet-400"
@@ -104,7 +119,7 @@ function Category() {
                         <Trash2
                           size={20}
                           className="cursor-pointer text-red-600"
-                          onClick={() => confirmModal(Number(category.id))}
+                          onClick={() => confirmModal(Number(post.id))}
                         />
                       }
                     </td>
@@ -130,4 +145,4 @@ function Category() {
   )
 }
 
-export default Category
+export default PostList

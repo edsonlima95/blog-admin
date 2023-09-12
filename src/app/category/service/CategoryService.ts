@@ -17,11 +17,12 @@ export class CategoryService {
   }
 
   static async getCategory(
-    page: number,
-    perpage: number
+    page: number | null = 1,
+    perpage: number | null = 5,
+    pagination: boolean = true
   ): Promise<CategoryProps[]> {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/categories?page=${page}&perpage=${perpage}`
+      `${process.env.NEXT_PUBLIC_URL_API}/categories?page=${page}&perpage=${perpage}&pagination=${pagination}`
     )
 
     return response.json()

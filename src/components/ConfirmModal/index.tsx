@@ -6,7 +6,7 @@ type ConfirmModalProps = {
   description?: string
 }
 
-function ConformModal({
+function ConfirmModal({
   title = "Titulo do modal",
   modalId,
   description
@@ -29,4 +29,4 @@ function ConformModal({
   )
 }
 
-export default ConformModal
+export default ConfirmModal
