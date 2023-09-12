@@ -9,6 +9,11 @@ import swal from "sweetalert"
 import { Pagination } from "@mui/material"
 import ConfirmModal from "@/components/ConfirmModal"
 
+export type CategoryResponseProps = {
+  categoriesList: CategoryProps[]
+  totalItems: number
+}
+
 export type CategoryProps = {
   id?: number
   name: string
@@ -32,7 +37,7 @@ function Category() {
     setTotalItems(response.totalItems)
   }
 
-  function handleChange(event, page: number) {
+  function handleChange(event: unknown, page: number) {
     setPage(page)
     getCategories(page, perpage)
   }
@@ -45,7 +50,7 @@ function Category() {
         confirm: {
           value: id
         },
-        cancel: "sair"
+        cancel: true
       },
       dangerMode: true
     }).then(async (id) => {

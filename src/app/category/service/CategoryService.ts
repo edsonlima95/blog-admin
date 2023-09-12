@@ -1,4 +1,4 @@
-import { CategoryProps } from "../page"
+import { CategoryProps, CategoryResponseProps } from "../page"
 
 export class CategoryService {
   static async createCategory(data: CategoryProps) {
@@ -20,7 +20,7 @@ export class CategoryService {
     page: number | null = 1,
     perpage: number | null = 5,
     pagination: boolean = true
-  ): Promise<CategoryProps[]> {
+  ): Promise<CategoryResponseProps> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_URL_API}/categories?page=${page}&perpage=${perpage}&pagination=${pagination}`
     )

@@ -1,6 +1,4 @@
 "use client"
-import Breadcrumb from "@/components/Breadcrumb"
-import BaseTemplate from "@/components/template/BaseTemplate"
 import { useForm } from "react-hook-form"
 import { PostService } from "../../service/PostService"
 import { toast } from "react-toastify"
@@ -9,6 +7,8 @@ import { z } from "zod"
 import { useEffect, useState } from "react"
 import { CategoryService } from "@/app/category/service/CategoryService"
 import { CategoryProps } from "@/app/category/page"
+import Breadcrumb from "@/components/Breadcrumb"
+import BaseTemplate from "@/components/template/BaseTemplate"
 
 type PostFormProps = {
   params: {
@@ -22,7 +22,7 @@ export type PostCreateProps = {
   description: string
   status: boolean
   user_id: number
-  category_id: number
+  category_id: string
 }
 
 const schema = z.object({
@@ -79,13 +79,12 @@ function PostForm({ params }: PostFormProps) {
     setValue("title", response.title)
     setValue("description", response.description)
     setValue("status", response.status)
-    setValue("user_id", response.user.id)
-    setValue("category_id", response.category.id)
+    setValue("category_id", String(response.category.id))
   }
 
   async function getCategories() {
     const response = await CategoryService.getCategory(null, null, false)
-    setCategories(response)
+    setCategories(response.categoriesList)
   }
 
   return (
@@ -124,7 +123,7 @@ function PostForm({ params }: PostFormProps) {
               <textarea
                 {...register("description")}
                 className={`textarea textarea-bordered w-full ${
-                  errors.description && "input-error"
+                  errors.description && "textarea-error"
                 }`}
                 placeholder="Descrição"></textarea>
 
@@ -141,7 +140,9 @@ function PostForm({ params }: PostFormProps) {
                 <span className="label-text">Categoria</span>
               </label>
               <select
-                className="select select-bordered w-full"
+                className={`select select-bordered w-full ${
+                  errors.category_id && "select-error"
+                }`}
                 {...register("category_id")}>
                 <option disabled selected value="">
                   Escolha o status
@@ -157,16 +158,17 @@ function PostForm({ params }: PostFormProps) {
               </small>
             </div>
 
+            {/* STATUS */}
             <div className="w-1/2">
               <label className="label">
                 <span className="label-text">Status</span>
               </label>
               <select
-                className="select select-bordered w-full"
+                className={`select select-bordered w-full ${
+                  errors.status && "select-error"
+                }`}
                 {...register("status")}>
-                <option disabled selected value="">
-                  Escolha o status
-                </option>
+                <option disabled>Escolha o status</option>
                 <option value="ativo">ATIVO</option>
                 <option value="inativo">INATIVO</option>
               </select>

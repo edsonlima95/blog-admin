@@ -1,13 +1,18 @@
 "use client"
+import { FileEdit, ImageIcon, Trash2 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { PostService } from "./service/PostService"
+import { Pagination } from "@mui/material"
 import Breadcrumb from "@/components/Breadcrumb"
 import ConfirmModal from "@/components/ConfirmModal"
 import BaseTemplate from "@/components/template/BaseTemplate"
-import { FileEdit, Trash2 } from "lucide-react"
 import Link from "next/link"
-import { useEffect, useState } from "react"
 import swal from "sweetalert"
-import { PostService } from "./service/PostService"
-import { Pagination } from "@mui/material"
+
+export type PostResponseProps = {
+  postsList: PostProps[]
+  totalItems: number
+}
 
 export type PostProps = {
   id?: number
@@ -41,7 +46,7 @@ function PostList() {
     setTotalItems(response.totalItems)
   }
 
-  function handleChange(event, page: number) {
+  function handleChange(event: unknown, page: number) {
     setPage(page)
     getPosts(page, perpage)
   }
@@ -54,7 +59,7 @@ function PostList() {
         confirm: {
           value: id
         },
-        cancel: "sair"
+        cancel: true
       },
       dangerMode: true
     }).then(async (id) => {
@@ -108,19 +113,33 @@ function PostList() {
                     <td>{post.category.name}</td>
                     <td className="flex gap-2">
                       {
-                        <Link href={`/Post/create/${post.id}`}>
-                          <FileEdit
-                            size={20}
-                            className="cursor-pointer text-violet-400"
-                          />
+                        <Link href={`/posts/image/${post.id}`}>
+                          <div className="tooltip" data-tip="Imagem">
+                            <ImageIcon
+                              size={20}
+                              className="cursor-pointer text-violet-400"
+                            />
+                          </div>
                         </Link>
                       }
                       {
-                        <Trash2
-                          size={20}
-                          className="cursor-pointer text-red-600"
-                          onClick={() => confirmModal(Number(post.id))}
-                        />
+                        <Link href={`/posts/create/${post.id}`}>
+                          <div className="tooltip" data-tip="editar">
+                            <FileEdit
+                              size={20}
+                              className="cursor-pointer text-violet-400"
+                            />
+                          </div>
+                        </Link>
+                      }
+                      {
+                        <div className="tooltip" data-tip="deletar">
+                          <Trash2
+                            size={20}
+                            className="cursor-pointer text-red-600"
+                            onClick={() => confirmModal(Number(post.id))}
+                          />
+                        </div>
                       }
                     </td>
                   </tr>

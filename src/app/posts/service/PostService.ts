@@ -1,5 +1,5 @@
 import { PostCreateProps } from "../create/[[...id]]/page"
-import { PostProps } from "../page"
+import { PostProps, PostResponseProps } from "../page"
 
 export class PostService {
   static async createPost(data: PostCreateProps) {
@@ -16,7 +16,10 @@ export class PostService {
     return response.json()
   }
 
-  static async getPost(page: number, perpage: number): Promise<PostProps[]> {
+  static async getPost(
+    page: number,
+    perpage: number
+  ): Promise<PostResponseProps> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_URL_API}/posts?page=${page}&perpage=${perpage}`
     )
@@ -50,6 +53,13 @@ export class PostService {
   static async deletePost(id: number) {
     return await fetch(`${process.env.NEXT_PUBLIC_URL_API}/posts/${id}`, {
       method: "DELETE"
+    })
+  }
+
+  static async updateImage(image: FormData, id: number) {
+    await fetch(`${process.env.NEXT_PUBLIC_URL_API}/posts/image/${id}`, {
+      method: "PATCH",
+      body: image
     })
   }
 }
