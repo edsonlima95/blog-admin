@@ -4,47 +4,38 @@ import BaseTemplate from "@/components/template/BaseTemplate"
 import { useForm } from "react-hook-form"
 import { PostService } from "../../service/PostService"
 import { toast } from "react-toastify"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect, useState } from "react"
 type ImageProps = {
   image: FileList
 }
 
-const schema = z.object({
-  image: z
-    .instanceof(FileList)
-    .refine((image) => image[0]?.size <= 100000, `Max file size is 1MB.`)
-    .refine((image) => image[0]?.length == 0, { message: "Image is required." })
-    .refine(
-      (image) => {
-        console.log(image)
-        const allowedTypes = ["image/jpeg", "image/png", "image/jpg"]
-        if (image) {
-          return allowedTypes.includes(image[0]?.type)
-        }
-      },
-      {
-        message:
-          "Imagem obrigatória. apenas arquivos JPEG, PNG e JPG são permitidos."
-      }
-    )
-})
-
 function Image({ params }: { params: { id: number } }) {
+  const [image, setImage] = useState("")
+
   const {
     handleSubmit,
     register,
     formState: { errors }
-  } = useForm<ImageProps>({
-    resolver: zodResolver(schema)
-  })
+  } = useForm<ImageProps>()
+
+  useEffect(() => {
+    if (params.id) {
+      findById(params.id)
+      console.log(image)
+    }
+  }, [params.id])
+
+  async function findById(id: number) {
+    const response = await PostService.findById(id)
+    setImage(response.image as string)
+  }
 
   async function onSubmit(data: ImageProps) {
     const formData = new FormData()
 
     formData.append("image", data.image[0])
-    await PostService.updateImage(formData, params.id)
-    toast.success("imagem enviada com sucesso")
+    const response = await PostService.updateImage(formData, params.id)
+    toast.error(response?.message)
   }
 
   return (

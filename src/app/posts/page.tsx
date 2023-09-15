@@ -19,6 +19,7 @@ export type PostProps = {
   title: string
   description: string
   status: boolean
+  image?: string
   user: {
     id: number
     name: string

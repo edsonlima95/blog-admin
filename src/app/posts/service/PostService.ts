@@ -57,9 +57,14 @@ export class PostService {
   }
 
   static async updateImage(image: FormData, id: number) {
-    await fetch(`${process.env.NEXT_PUBLIC_URL_API}/posts/image/${id}`, {
-      method: "PATCH",
-      body: image
-    })
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_URL_API}/posts/image/${id}`,
+      {
+        method: "PATCH",
+        body: image
+      }
+    )
+
+    return response.json()
   }
 }
