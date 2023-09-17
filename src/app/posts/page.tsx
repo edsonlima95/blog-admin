@@ -54,7 +54,7 @@ function PostList() {
 
   async function confirmModal(id: number) {
     swal({
-      title: "Deseja deletar esta categoria?",
+      title: "Deseja deletar este post?",
       icon: "warning",
       buttons: {
         confirm: {
@@ -67,7 +67,7 @@ function PostList() {
       if (id) {
         await PostService.deletePost(id)
         getPosts(page, perpage)
-        swal("Categoria deletada com sucesso!", {
+        swal("Post deletado com sucesso!", {
           icon: "success"
         })
       }
@@ -77,7 +77,7 @@ function PostList() {
   return (
     <>
       <ConfirmModal
-        title="Excluir categoria"
+        title="Excluir post"
         modalId="modal_Post"
         description="Texto do modal"
       />

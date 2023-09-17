@@ -5,13 +5,14 @@ import { useForm } from "react-hook-form"
 import { PostService } from "../../service/PostService"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
+import Image from "next/image"
 type ImageProps = {
   image: FileList
 }
 
-function Image({ params }: { params: { id: number } }) {
+function PostImage({ params }: { params: { id: number } }) {
   const [image, setImage] = useState("")
-
+  const [loading, setLoading] = useState(false)
   const {
     handleSubmit,
     register,
@@ -21,21 +22,31 @@ function Image({ params }: { params: { id: number } }) {
   useEffect(() => {
     if (params.id) {
       findById(params.id)
-      console.log(image)
     }
   }, [params.id])
 
   async function findById(id: number) {
     const response = await PostService.findById(id)
-    setImage(response.image as string)
+    if (response?.image) {
+      setImage(response.image as string)
+    }
   }
 
   async function onSubmit(data: ImageProps) {
+    setLoading(true)
     const formData = new FormData()
 
     formData.append("image", data.image[0])
     const response = await PostService.updateImage(formData, params.id)
-    toast.error(response?.message)
+
+    if (response?.image) {
+      setImage(response.image)
+      setLoading(false)
+      toast.success("Imagem enviada com sucesso!")
+    } else {
+      toast.error(response.message)
+      setLoading(false)
+    }
   }
 
   return (
@@ -46,23 +57,39 @@ function Image({ params }: { params: { id: number } }) {
         link="/posts"
         currentTitle="imagem"
       />
-      <div className="wrapper-content">
-        <form className="py-2" onSubmit={handleSubmit(onSubmit)}>
-          <div className="w-full">
-            <label className="label block">
-              <span className="label-text">Nome</span>
-            </label>
+      <div className="wrapper-content flex gap-3">
+        {image && (
+          <Image
+            src={image}
+            width={200}
+            height={200}
+            alt="Image do post"
+            className="rounded-md"
+          />
+        )}
+
+        <form
+          className="py-2 flex items-center justify-center w-full gap-3"
+          onSubmit={handleSubmit(onSubmit)}>
+          <div className="w-full ">
             <input
               type="file"
-              className={`file-input file-input-bordered file-input-primary w-full`}
+              className={`file-input flex-1 file-input-bordered file-input-primary w-full`}
               {...register("image")}
             />
             <small className="text-red-500">{errors.image?.message}</small>
           </div>
 
-          <div className="w-full text-center mt-3">
-            <button className="btn btn-wide bg-violet-600 text-white hover:bg-violet-500">
-              salvar
+          <div className="w-full">
+            <button className="btn  btn-primary text-white">
+              {loading ? (
+                <div className="flex justify-center items-center gap-2">
+                  <span className="loading loading-spinner" />
+                  <span> Enviando</span>
+                </div>
+              ) : (
+                <span>Enviar</span>
+              )}
             </button>
           </div>
         </form>
@@ -71,4 +98,4 @@ function Image({ params }: { params: { id: number } }) {
   )
 }
 
-export default Image
+export default PostImage
