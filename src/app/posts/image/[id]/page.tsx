@@ -74,7 +74,7 @@ function PostImage({ params }: { params: { id: number } }) {
           <div className="w-full ">
             <input
               type="file"
-              className={`file-input flex-1 file-input-bordered file-input-primary w-full`}
+              className={`file-input flex-1 file-input-bordered file-input-primary w-full bg-neutral-900`}
               {...register("image")}
             />
             <small className="text-red-500">{errors.image?.message}</small>

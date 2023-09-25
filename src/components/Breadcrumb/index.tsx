@@ -16,7 +16,7 @@ function Breadcrumb({
 }: BreadcrumbProps) {
   return (
     <div className="text-sm breadcrumbs mb-8">
-      <h2 className="uppercase text-xl font-semibold mb-4 text-zinc-600">
+      <h2 className="uppercase text-xl font-semibold mb-4 text-zinc-400">
         {pageTitle}
       </h2>
       <ul>

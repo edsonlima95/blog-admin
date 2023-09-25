@@ -91,7 +91,7 @@ function CategoryForm({ params }: CategoryFormProps) {
               <input
                 type="text"
                 placeholder="Digite o nome"
-                className={`input input-bordered w-full ${
+                className={`input input-bordered w-full bg-neutral-900 ${
                   errors.name && "input-error"
                 }`}
                 {...register("name")}
@@ -105,7 +105,7 @@ function CategoryForm({ params }: CategoryFormProps) {
               <input
                 type="text"
                 placeholder="Digite a descrição"
-                className={`input input-bordered w-full ${
+                className={`input input-bordered w-full bg-neutral-900 ${
                   errors.description && "input-error"
                 }`}
                 {...register("description")}
@@ -116,7 +116,7 @@ function CategoryForm({ params }: CategoryFormProps) {
             </div>
           </div>
           <div className="w-full text-center mt-3">
-            <button className="btn btn-wide bg-violet-600 text-white hover:bg-violet-500">
+            <button className="btn btn-wide bg-violet-600 border-0 mt-2 text-white hover:bg-violet-500">
               salvar
             </button>
           </div>

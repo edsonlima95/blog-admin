@@ -1,5 +1,5 @@
 "use client"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { PostService } from "../../service/PostService"
 import { toast } from "react-toastify"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -9,6 +9,9 @@ import { CategoryService } from "@/app/category/service/CategoryService"
 import { CategoryProps } from "@/app/category/page"
 import Breadcrumb from "@/components/Breadcrumb"
 import BaseTemplate from "@/components/template/BaseTemplate"
+import "react-quill/dist/quill.snow.css"
+import ReactQuill from "react-quill"
+import { formats, modules } from "./reactquill.config"
 
 type PostFormProps = {
   params: {
@@ -27,8 +30,10 @@ export type PostCreateProps = {
 
 const schema = z.object({
   title: z.string().nonempty({ message: "nome é obrigatório" }),
-  description: z.string().nonempty({ message: "descrição é obrigatório" }),
-  status: z.string().nonempty({ message: "satatus é obrigatório" }),
+  description: z.string({
+    required_error: "Descrição é obrigatório"
+  }),
+  status: z.string().nonempty({ message: "status é obrigatório" }),
   user_id: z.string(),
   category_id: z.string().nonempty({ message: "categoria é obrigatório" })
 })
@@ -39,6 +44,7 @@ function PostForm({ params }: PostFormProps) {
     handleSubmit,
     setError,
     setValue,
+    control,
     formState: { errors }
   } = useForm<PostCreateProps>({ resolver: zodResolver(schema) })
 
@@ -52,6 +58,7 @@ function PostForm({ params }: PostFormProps) {
   }, [])
 
   async function onSubmit(data: PostCreateProps) {
+    console.log(data)
     if (params.id) {
       const response = await PostService.updatePost(Number(params.id[0]), data)
       if (response.message) {
@@ -83,7 +90,7 @@ function PostForm({ params }: PostFormProps) {
   }
 
   async function getCategories() {
-    const response = await CategoryService.getCategory(null, null, false)
+    const response = await CategoryService.getCategories()
     setCategories(response.categoriesList)
   }
 
@@ -107,7 +114,7 @@ function PostForm({ params }: PostFormProps) {
               <input
                 type="text"
                 placeholder="Digite o titulo"
-                className={`input input-bordered w-full ${
+                className={`input input-bordered w-full bg-neutral-900 ${
                   errors.title && "input-error"
                 }`}
                 {...register("title")}
@@ -120,15 +127,23 @@ function PostForm({ params }: PostFormProps) {
               <label className="label block">
                 <span className="label-text">Descrição</span>
               </label>
-              <textarea
-                {...register("description")}
-                className={`textarea textarea-bordered w-full ${
-                  errors.description && "textarea-error"
-                }`}
-                placeholder="Descrição"></textarea>
 
+              <Controller
+                name="description"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <ReactQuill
+                    theme="snow"
+                    formats={formats}
+                    modules={modules}
+                    onChange={onChange}
+                    value={value}
+                  />
+                )}
+              />
               <small className="text-red-500">
-                {errors.description?.message}
+                {/*  {errors.description && "descrição é obrigatório"} */}
+                {errors.description && <p>{errors.description.message} </p>}
               </small>
             </div>
           </div>
@@ -140,13 +155,11 @@ function PostForm({ params }: PostFormProps) {
                 <span className="label-text">Categoria</span>
               </label>
               <select
-                className={`select select-bordered w-full ${
+                className={`select select-bordered w-full bg-neutral-900 ${
                   errors.category_id && "select-error"
                 }`}
                 {...register("category_id")}>
-                <option disabled selected value="">
-                  Escolha o status
-                </option>
+                <option value="">Escolha o status</option>
                 {categories?.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -164,7 +177,7 @@ function PostForm({ params }: PostFormProps) {
                 <span className="label-text">Status</span>
               </label>
               <select
-                className={`select select-bordered w-full ${
+                className={`select select-bordered w-full bg-neutral-900 ${
                   errors.status && "select-error"
                 }`}
                 {...register("status")}>
@@ -176,7 +189,7 @@ function PostForm({ params }: PostFormProps) {
             </div>
           </div>
           <div className="w-full text-center mt-3">
-            <button className="btn btn-wide bg-violet-600 text-white hover:bg-violet-500">
+            <button className="btn btn-wide border-0 mt-2 bg-violet-600 text-white hover:bg-violet-500">
               salvar
             </button>
           </div>

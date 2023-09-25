@@ -1,3 +1,4 @@
+import { TokenService } from "@/service/tokenService"
 import { PostCreateProps } from "../create/[[...id]]/page"
 import { PostProps, PostResponseProps } from "../page"
 
@@ -6,7 +7,8 @@ export class PostService {
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/posts`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        authorization: `Bearer ${TokenService.getTokenFromLocalStorage()}`
       },
       body: JSON.stringify(data)
     })
@@ -21,7 +23,12 @@ export class PostService {
     perpage: number
   ): Promise<PostResponseProps> {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/posts?page=${page}&perpage=${perpage}`
+      `${process.env.NEXT_PUBLIC_URL_API}/posts?page=${page}&perpage=${perpage}`,
+      {
+        headers: {
+          authorization: `Bearer ${TokenService.getTokenFromLocalStorage()}`
+        }
+      }
     )
 
     return response.json()
@@ -29,7 +36,12 @@ export class PostService {
 
   static async findById(id: number): Promise<PostProps> {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/posts/${id}`
+      `${process.env.NEXT_PUBLIC_URL_API}/posts/${id}`,
+      {
+        headers: {
+          authorization: `Bearer ${TokenService.getTokenFromLocalStorage()}`
+        }
+      }
     )
 
     return response.json()
@@ -41,7 +53,8 @@ export class PostService {
       {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          authorization: `Bearer ${TokenService.getTokenFromLocalStorage()}`
         },
         body: JSON.stringify(data)
       }
@@ -52,7 +65,10 @@ export class PostService {
 
   static async deletePost(id: number) {
     return await fetch(`${process.env.NEXT_PUBLIC_URL_API}/posts/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${TokenService.getTokenFromLocalStorage()}`
+      }
     })
   }
 
@@ -61,6 +77,9 @@ export class PostService {
       `${process.env.NEXT_PUBLIC_URL_API}/posts/image/${id}`,
       {
         method: "PATCH",
+        headers: {
+          authorization: `Bearer ${TokenService.getTokenFromLocalStorage()}`
+        },
         body: image
       }
     )

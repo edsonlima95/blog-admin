@@ -4,13 +4,33 @@
 
 
 .wrapper-content {
-	@apply bg-white rounded-sm p-3;
-}
-
-body {
-	@apply text-zinc-600
+	@apply bg-neutral-800 rounded-sm p-3;
 }
 
 tr {
-	@apply border-b-zinc-200 !important;
+	@apply border-b-zinc-600 !important;
+}
+
+th {
+	@apply text-neutral-400
+}
+
+
+label span {
+	@apply text-zinc-400 !important;
+}
+
+/* tinymce */
+.ql-editor{ 
+  @apply text-zinc-300 !important;
+  height: 400px !important;
+  overflow-y: auto;
+}
+
+.ql-container.ql-snow {
+	@apply border-zinc-600 !important;
+}
+
+.ql-toolbar.ql-snow {
+	@apply border-zinc-600 !important;
 }

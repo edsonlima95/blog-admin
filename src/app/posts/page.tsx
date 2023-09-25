@@ -96,7 +96,6 @@ function PostList() {
                 <tr>
                   <th>Codigo</th>
                   <th>title</th>
-                  <th>Descrição</th>
                   <th>Situação</th>
                   <th>Autor</th>
                   <th>Categoria</th>
@@ -108,7 +107,6 @@ function PostList() {
                   <tr key={post.id}>
                     <th>{post.id}</th>
                     <td>{post.title}</td>
-                    <td>{post.description}</td>
                     <td>{post.status ? "ativo" : "inativo"}</td>
                     <td>{post.user.name}</td>
                     <td>{post.category.name}</td>
