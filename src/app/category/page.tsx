@@ -8,7 +8,6 @@ import Link from "next/link"
 import swal from "sweetalert"
 import { Pagination } from "@mui/material"
 import ConfirmModal from "@/components/ConfirmModal"
-import { CrudService } from "@/service/crudGerenic"
 
 export type CategoryResponseProps = {
   categoriesList: CategoryProps[]
@@ -33,9 +32,10 @@ function Category() {
   }, [])
 
   async function getCategories(page: number, perpage: number) {
-    const url = `categories?page=${page}&perpage=${perpage}`
-    const response =
-      await CrudService.getByPagination<CategoryResponseProps>(url)
+    const response = await CategoryService.getCategoryByPagination(
+      page,
+      perpage
+    )
     setCategories(response.categoriesList)
     setTotalItems(response.totalItems)
   }

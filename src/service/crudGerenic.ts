@@ -1,4 +1,4 @@
-import { TokenService } from "./tokenService"
+/* import { TokenService } from "./tokenService"
 
 export class CrudService {
   static async create<T>(data: T) {
@@ -25,8 +25,6 @@ export class CrudService {
 
     return response.json()
   }
-
-  /* 
 
   static async getCategories(): Promise<CategoryResponseProps> {
     const response = await fetch(
@@ -77,5 +75,6 @@ export class CrudService {
         authorization: `Bearer ${CategoryService.getTokenFromLocalStorage()}`
       }
     })
-  } */
+  }
 }
+ */

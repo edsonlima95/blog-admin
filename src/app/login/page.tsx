@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form"
 import { ToastContainer, toast } from "react-toastify"
 import { z } from "zod"
 import "react-toastify/dist/ReactToastify.css"
+import { setCookie } from "cookies-next"
+import { useRouter } from "next/navigation"
 
 type LoginProps = {
   email: string
@@ -31,6 +33,8 @@ function Login() {
     resolver: zodResolver(schema)
   })
 
+  const router = useRouter()
+
   async function Authentication(data: LoginProps) {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_URL_API}/auth/login`,
@@ -50,8 +54,18 @@ function Login() {
       return
     }
 
-    localStorage.setItem("user", JSON.stringify(login.user))
-    localStorage.setItem("token", JSON.stringify(login.access_token))
+    setCookie("user", JSON.stringify(login), {
+      maxAge: 60 * 60 * 24 * 30, // 30 dias
+      path: "/"
+    })
+    setCookie("token", login.access_token, {
+      maxAge: 60 * 60 * 24 * 30, // 30 dias
+      path: "/"
+    })
+
+    router.push("/")
+    /* localStorage.setItem("user", JSON.stringify(login.user))
+    localStorage.setItem("token", JSON.stringify(login.access_token)) */
   }
   return (
     <>
