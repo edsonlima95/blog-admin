@@ -7,6 +7,7 @@ import { z } from "zod"
 import "react-toastify/dist/ReactToastify.css"
 import { setCookie } from "cookies-next"
 import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 type LoginProps = {
   email: string
@@ -49,7 +50,6 @@ function Login() {
     const login = await response.json()
 
     if (login.error) {
-      console.log("entrou")
       toast.error(login.message)
       return
     }
